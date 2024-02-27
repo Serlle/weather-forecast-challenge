@@ -14,6 +14,7 @@ gem 'faraday'
 group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
   gem 'pry'
+  gem 'rails-controller-testing'
 end
 
 group :development do
