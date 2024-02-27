@@ -10,4 +10,18 @@ class WeatherForecastsControllerTest < ActionDispatch::IntegrationTest
     get new_weather_forecast_url
     assert_response :success
   end
+
+  test "should get coordinates for cities" do
+    post weather_forecasts_url, params: { cities: "CDMX, Colima, Guadalajara, MTY" }
+    assert_response :success
+
+    coordinates = assigns(:coordinates)
+    assert_not_nil coordinates
+    assert_equal 4, coordinates.length
+
+    coordinates.each do |coordinate|
+      assert_not_nil coordinate[:latitude]
+      assert_not_nil coordinate[:longitude]
+    end
+  end
 end
