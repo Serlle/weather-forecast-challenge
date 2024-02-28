@@ -12,7 +12,7 @@ class WeatherForecastsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should get coordinates for cities" do
-    post weather_forecasts_url, params: { cities: "CDMX, Colima, Guadalajara, MTY" }
+    get weather_forecasts_url, params: { cities: "CDMX, Colima, Guadalajara, MTY" }
 
     coordinates = assigns(:coordinates)
     assert_not_nil coordinates
@@ -25,7 +25,7 @@ class WeatherForecastsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should redirect with error message when cities parameter is blank" do
-    post weather_forecasts_url, params: { cities: "" }
+    get weather_forecasts_url, params: { cities: "" }
     assert_not_nil flash[:error]
     assert_equal "No se proporcionaron ciudades. Por favor ingresa al menos una ciudad.", flash[:error]
   end
@@ -37,7 +37,7 @@ class WeatherForecastsControllerTest < ActionDispatch::IntegrationTest
     end
   
     ReservamosService.stub :new, mock_service do
-      post weather_forecasts_url, params: { cities: "CDMX" }
+      get weather_forecasts_url, params: { cities: "CDMX" }
       
       assert_not_nil flash[:error]
       assert_equal "Hubo un problema al obtener las coordenadas de la ciudad. Por favor intenta de nuevo más tarde.", flash[:error]
@@ -45,7 +45,7 @@ class WeatherForecastsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should get tempertures of cities with coordinates" do
-    post weather_forecasts_url, params: { cities: "Cancun, MTY" }
+    get weather_forecasts_url, params: { cities: "Cancun, MTY" }
     forecasts = assigns(:forecasts)
 
     assert_not_nil forecasts
