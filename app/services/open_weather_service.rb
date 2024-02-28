@@ -24,7 +24,7 @@ class OpenWeatherService
 
   def fetch_forecast(latitude, longitude)
     api_key = ENV['OPEN_WEATHER_MAP_API_KEY']
-    city_paramater = { lat: latitude, lon: longitude, appid: api_key }
+    city_paramater = { lat: latitude, lon: longitude , units: "metric", appid: api_key }
     response = Faraday.get(BASE_URL, city_paramater)
     parse_response(response)
   end
