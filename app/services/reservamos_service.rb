@@ -24,7 +24,7 @@ class ReservamosService
     if data["result_type"] == "city"
       { latitude: data["lat"], longitude: data["long"] }
     else
-      { error: "Algo malo ocurrió" }
+      { error: "API error" }
     end
   end
 end
