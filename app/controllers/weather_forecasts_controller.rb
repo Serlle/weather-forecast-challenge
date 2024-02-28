@@ -13,6 +13,9 @@ class WeatherForecastsController < ApplicationController
       flash[:error] = "Hubo un problema al obtener las coordenadas de la ciudad. Por favor intenta de nuevo más tarde."
       render :new
     else
+      weather_service = OpenWeatherService.new
+      @forecasts = weather_service.get_forecasts(@coordinates)
+
       flash[:success] = "Coordenadas obtenidas exitosamente"
       redirect_to weather_forecasts_path
     end

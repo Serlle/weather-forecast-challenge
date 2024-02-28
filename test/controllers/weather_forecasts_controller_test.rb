@@ -43,4 +43,17 @@ class WeatherForecastsControllerTest < ActionDispatch::IntegrationTest
       assert_equal "Hubo un problema al obtener las coordenadas de la ciudad. Por favor intenta de nuevo más tarde.", flash[:error]
     end
   end
+
+  test "should get tempertures of cities with coordinates" do
+    post weather_forecasts_url, params: { cities: "Cancun, MTY" }
+    forecasts = assigns(:forecasts)
+
+    assert_not_nil forecasts
+    assert_equal 2, forecasts[:cities].length
+
+    forecasts[:cities].each do |forecast|
+      assert_not_nil forecast[:forecast_list][0][:temp_min]
+      assert_not_nil forecast[:forecast_list][0][:temp_max]
+    end
+  end
 end
