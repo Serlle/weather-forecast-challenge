@@ -1,4 +1,5 @@
 class WeatherForecastsController < ApplicationController
+  before_action :redirect_to_new, only: :index
   before_action :validate_cities_present, only: :index
 
   def index
@@ -23,10 +24,15 @@ class WeatherForecastsController < ApplicationController
   end
 
   def validate_cities_present
-    @cities = cities_params[:cities].split(',').map(&:strip)
-    if @cities.empty?
+    @cities = cities_params[:cities]&.split(',')&.map(&:strip)
+    if @cities.nil? || @cities.empty?
       flash[:error] = "No se proporcionaron ciudades. Por favor ingresa al menos una ciudad."
-      render :new
+      redirect_to new_weather_forecast_path
     end
+  end
+
+  def redirect_to_new
+    flash[:alert] = "Puedes entrar a index o al path de -weather_forecasts/- si solo ingresas los nombres de las ciudades"
+    redirect_to new_weather_forecast_path if params[:cities].nil?
   end
 end

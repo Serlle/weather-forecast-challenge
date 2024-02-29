@@ -1,18 +1,18 @@
-<h2>Forecast Data</h2>
-  <% @forecasts[0][:cities].each do |forecast| %>
-    <h3><%= forecast[:city] %></h3>
-    <table>
+<h1>Forecast Data</h1>
+<% @forecasts[0][:cities].each do |forecast| %>
+  <h3><%= forecast[:city] %></h3>
+  <table>
+    <tr>
+      <th>Date and Time</th>
+      <th>Minimum Temperature</th>
+      <th>Maximum temperature</th>
+    </tr>
+    <% forecast[:forecast_list].each do |data| %>
       <tr>
-        <th>Date and Time</th>
-        <th>Minimum Temperature</th>
-        <th>Maximum temperature</th>
+        <td><%= data[:date_time] %></td>
+        <td><%= data[:temp_min] %></td>
+        <td><%= data[:temp_max] %></td>
       </tr>
-      <% forecast[:forecast_list].each do |data| %>
-        <tr>
-          <td><%= data[:date_time] %></td>
-          <td><%= data[:temp_min] %></td>
-          <td><%= data[:temp_max] %></td>
-        </tr>
-      <% end %>
-    </table>
-  <% end %>
+    <% end %>
+  </table>
+<% end %>
