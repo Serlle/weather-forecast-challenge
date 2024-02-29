@@ -1,22 +1,21 @@
 require "test_helper"
 
 class WeatherForecastsControllerTest < ActionDispatch::IntegrationTest
-  test "should get index" do
-    get weather_forecasts_url
-    assert_response :success
-  end
-
   test "should get new" do
     get new_weather_forecast_url
     assert_response :success
   end
 
   test "should get coordinates for cities" do
-    get weather_forecasts_url, params: { cities: "CDMX, Colima, Guadalajara, MTY" }
+    service = WeatherForecastService.new
+    params = "CDMX, Colima, Guadalajara, MTY"
+    cities = params.split(',').map(&:strip)
 
-    coordinates = assigns(:coordinates)
+    result = service.get_forecasts(cities)
+
+    coordinates = result[1][:coordinates]
     assert_not_nil coordinates
-    assert_equal 4, coordinates.length
+    assert_equal 4, coordinates.count
 
     coordinates.each do |coordinate|
       assert_not_nil coordinate[:latitude]
@@ -30,17 +29,35 @@ class WeatherForecastsControllerTest < ActionDispatch::IntegrationTest
     assert_equal "No se proporcionaron ciudades. Por favor ingresa al menos una ciudad.", flash[:error]
   end
 
-  test "should redirect with error message when API call fails" do
+  test "should redirect a error message when the API of coordinates fails" do
     mock_service = Minitest::Mock.new
     def mock_service.get_coordinates(city)
-      { error: "API error" }
+      { body_error: "Hubo un problema con conectar a la api de Reservamos" }
     end
   
     ReservamosService.stub :new, mock_service do
       get weather_forecasts_url, params: { cities: "CDMX" }
       
       assert_not_nil flash[:error]
-      assert_equal "Hubo un problema al obtener las coordenadas de la ciudad. Por favor intenta de nuevo más tarde.", flash[:error]
+      assert_redirected_to new_weather_forecast_path
+
+      assert_equal "Hubo un problema con conectar a la api de Reservamos", flash[:error]
+    end
+  end
+
+  test "should redirect a error message when the API of Open Weather fails" do
+    mock_service = Minitest::Mock.new
+    def mock_service.get_forecasts(cities)
+      { body_error: "Hubo un problema con conectar a la api de Open Weather" }
+    end
+  
+    WeatherForecastService.stub :new, mock_service do
+      get weather_forecasts_url, params: { cities: "CDMX" }
+      
+      assert_not_nil flash[:error]
+      assert_redirected_to new_weather_forecast_path
+
+      assert_equal "Hubo un problema con conectar a la api de Open Weather", flash[:error]
     end
   end
 
@@ -48,10 +65,10 @@ class WeatherForecastsControllerTest < ActionDispatch::IntegrationTest
     get weather_forecasts_url, params: { cities: "Cancun, MTY" }
     forecasts = assigns(:forecasts)
 
-    assert_not_nil forecasts
-    assert_equal 2, forecasts[:cities].length
+    assert_not_nil forecasts[0][:cities]
+    assert_equal 2, forecasts[0][:cities].count
 
-    forecasts[:cities].each do |forecast|
+    forecasts[0][:cities].each do |forecast|
       assert_not_nil forecast[:forecast_list][0][:temp_min]
       assert_not_nil forecast[:forecast_list][0][:temp_max]
     end

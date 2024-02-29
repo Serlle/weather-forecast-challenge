@@ -24,7 +24,7 @@ class ReservamosService
     if data["result_type"] == "city"
       { latitude: data["lat"], longitude: data["long"] }
     else
-      { error: "API error" }
+      { body_error: "Hubo un problema con conectar a la api de Reservamos" }
     end
   end
 end
