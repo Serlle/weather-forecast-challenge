@@ -19,12 +19,16 @@ class ReservamosService
   end
 
   def result_type(data)
-    data = data[0]
-
-    if data["result_type"] == "city"
-      { latitude: data["lat"], longitude: data["long"] }
+    if data.present? && data[0].present?
+      data = data[0]
+  
+      if data["result_type"] == "city"
+        { latitude: data["lat"], longitude: data["long"] }
+      else
+        { body_error: "Hubo un problema con conectar a la api de Reservamos" }
+      end
     else
-      { body_error: "Hubo un problema con conectar a la api de Reservamos" }
+      { body_error: "No se encontraron datos para la ciudad proporcionada" }
     end
   end
 end

@@ -9,7 +9,7 @@ class WeatherForecastsController < ApplicationController
       flash[:error] = "#{info[:body_error]}"
       redirect_to new_weather_forecast_path
     else
-      flash[:success] = "Coordenadas obtenidas exitosamente"
+      flash[:notice] = "Coordenadas obtenidas exitosamente"
       @forecasts = info
     end
   end
@@ -32,7 +32,6 @@ class WeatherForecastsController < ApplicationController
   end
 
   def redirect_to_new
-    flash[:alert] = "Puedes entrar a index o al path de -weather_forecasts/- si solo ingresas los nombres de las ciudades"
     redirect_to new_weather_forecast_path if params[:cities].nil?
   end
 end
