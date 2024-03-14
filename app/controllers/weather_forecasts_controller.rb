@@ -1,5 +1,5 @@
 class WeatherForecastsController < ApplicationController
-  before_action :redirect_to_new, only: :index
+  # before_action :redirect_to_new, only: :index
   before_action :validate_cities_present, only: :index
 
   def index
@@ -31,7 +31,7 @@ class WeatherForecastsController < ApplicationController
     end
   end
 
-  def redirect_to_new
-    redirect_to new_weather_forecast_path if params[:cities].nil?
-  end
+  # def redirect_to_new
+  #   redirect_to new_weather_forecast_path if params[:cities].nil?
+  # end
 end
