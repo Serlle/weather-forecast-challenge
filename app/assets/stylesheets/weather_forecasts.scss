@@ -17,3 +17,20 @@ tr, th, td {
 th {
   background-color: #f2f2f2;
 }
+
+.marquee { 
+  overflow: hidden;
+ }
+
+div.marquee--inner {
+  position: relative;
+  animation-name: marquee;
+  animation-duration: 1.5s; 
+  animation-timing-function: steps(1s, end);
+  animation-fill-mode: forwards;
+}
+
+@keyframes marquee {
+  from { left: -100%; }
+  to { left: 0%; }
+}

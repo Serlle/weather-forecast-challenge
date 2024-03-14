@@ -9,7 +9,7 @@ class WeatherForecastsController < ApplicationController
       flash[:error] = "#{info[:body_error]}"
       redirect_to new_weather_forecast_path
     else
-      flash[:notice] = "Coordenadas obtenidas exitosamente"
+      flash[:notice] = "Pronósticos obtenidos exitosamente"
       @forecasts = info
     end
   end
